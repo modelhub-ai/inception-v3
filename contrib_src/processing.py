@@ -11,6 +11,10 @@ class ImageProcessor(ImageProcessorBase):
         if isinstance(image, PIL.Image.Image):
             image = image.resize((299,299), resample = PIL.Image.LANCZOS)
             image = np.array(image).astype(np.float32)
+            if len(image.shape) > 2:
+                image = image[:,:,0:3]
+            else:
+                image = np.stack((image,)*3, axis=-1)
         else:
             raise IOError("Image Type not supported for preprocessing.")
         return image
